@@ -52,14 +52,14 @@ def buildAdjacencyMatrix(data):
     print(myMatrix)
     return myMatrix
 
-def getSmallest(cities, cityId):
+def getSmallest(allCities, city):
     smallestId = -1
     smallest = sys.maxsize
-
-    for i in range(len(cities)):
-        distance = getDistance(cities[cityId], cities[i])
+    
+    # TODO: Iteration by index won't work.
+    for i in allCities:
+        distance = getDistance(city, allCities[i])
         if distance < smallest and distance > 0:
-            print(distance)
             smallest = distance
             smallestId = i
 
@@ -75,13 +75,21 @@ def getPath(cities):
     path = []
     
     path.append(removeCity(cities, 0))
-    print(path)
 
     while cities:
-        smallest = -1
+        smallest = []
+        currentKey = -1
+        distance = -1
         current = path[len(path) - 1]
+
         for key in current:
-            current = key
+            currentKey = key
+
+        smallest = getSmallest(cities, current[currentKey]) 
+        distance = smallest[1]
+        path.append(removeCity(cities, smallest[0]))
+    
+    return path
 
 def deleteAll(cities):
     i = 0
@@ -90,5 +98,6 @@ def deleteAll(cities):
         print(cities)
         i += 1
 
-cities = getContent("./TSP_Files-1/tsp_example_1.txt")
-getPath(cities)
+cities = getContent("./TSP_Files-1/tsp_example_3.txt")
+path = getPath(cities)
+print(path)
