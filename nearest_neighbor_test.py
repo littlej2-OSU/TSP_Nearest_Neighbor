@@ -25,6 +25,17 @@ def getCityData(fileName):
 
     return allCities
 
+def outputTour(size, tour, fileName):
+    f = open(fileName, "w")     
+    
+    f.write(str(size) + "\n")
+
+    for city in tour:
+        for id in city:
+            f.write(str(id) + "\n")    
+
+    f.close()
+
 def getDistance(city1, city2):
     x = (city1[0] - city2[0])**2
     y = (city1[1] - city2[1])**2
@@ -101,9 +112,10 @@ def solve(fileName):
                 print("Best distance so far is: {}".format(path[0]))
     else:
         bestTour = getPath(cities, 0)
-
-    print("Distance: {}".format(bestTour[0]))
-    print("Cities visited: {}".format(len(bestTour[1])))
+    
+    outputTour(bestTour[0], bestTour[1], "test")
+    # print("Distance: {}".format(bestTour[0]))
+    # print("Cities visited: {}".format(len(bestTour[1])))
 
 fileName = "./TSP_Files-1/tsp_example_1.txt"
 solve(fileName)
