@@ -80,11 +80,11 @@ def getPath(cities, startingId):
     for key in lastCity:
         lastCityId = key
     
-    # Complete the path, add last distance
+    # Complete the cycle, add last distance to total distance
     distance += getDistance(firstCity, lastCity[lastCityId])
 
     return [distance, path]
 
 cities = getContent("./TSP_Files-1/tsp_example_2.txt")
 path = getPath(cities, 0)
-print(path)
+print("Distance: {}".format(path[0]))
