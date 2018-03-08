@@ -71,12 +71,18 @@ def getPath(cities, startingId):
         distance += smallest[1]
         path.append(removeCity(cities, smallest[0]))
     
-    # TODO: Add distance from last city to first city
-    # firstCity = path[0][startingId]
-    # lastCity = path[len(path) - 1]
+    # Add distance from last city to first city to total distance
+    firstCity = path[0][startingId]
+    lastCity = path[len(path) - 1]
+    lastCityId = None
+    
+    # Get city id of last city visited 
+    for key in lastCity:
+        lastCityId = key
+    
+    # Complete the path, add last distance
+    distance += getDistance(firstCity, lastCity[lastCityId])
 
-    # print(firstCity)
-    # print((lastCity.keys()))
     return [distance, path]
 
 cities = getContent("./TSP_Files-1/tsp_example_2.txt")
