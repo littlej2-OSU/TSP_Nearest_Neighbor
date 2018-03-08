@@ -97,8 +97,8 @@ def getPath(cities, startingId):
 
     return [distance, path]
 
-def solve(fileName):
-    cities = getCityData(fileName)
+def solve(inputFile, outputFile):
+    cities = getCityData(inputFile)
     tourLength = len(cities)     
     bestDistance = sys.maxsize
     bestTour = None
@@ -115,9 +115,10 @@ def solve(fileName):
     else:
         bestTour = getPath(cities, 0)
     
-    outputTour(bestTour[0], bestTour[1], "test")
-    # print("Distance: {}".format(bestTour[0]))
-    # print("Cities visited: {}".format(len(bestTour[1])))
+    outputTour(bestTour[0], bestTour[1], outputFile)
+    print("Distance: {}".format(bestTour[0]))
+    print("Cities visited: {}".format(len(bestTour[1])))
 
-fileName = "./TSP_Files-1/tsp_example_1.txt"
-solve(fileName)
+inputFile = "./TSP_Files-1/tsp_example_1.txt"
+outputFile = "output.txt"
+solve(inputFile, outputFile)
