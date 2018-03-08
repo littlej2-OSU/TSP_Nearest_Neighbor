@@ -1,5 +1,5 @@
 """
-Nearest Neighbor implimentation for the Travelling Salesman Problem
+Nearest Neighbor implementation for the Travelling Salesman Problem
 Project Group 31
 """
 import math
@@ -101,10 +101,10 @@ def solve(fileName):
                 bestTour = path
                 print("Best distance so far is: {}".format(path[0]))
     else:
-        bestTour = getPath(citiesCopy, 0)
+        bestTour = getPath(cities, 0)
 
     print("Distance: {}".format(bestTour[0]))
     print("Cities visited: {}".format(len(bestTour[1])))
 
-fileName = "./TSP_Files-1/tsp_example_1.txt"
+fileName = "./TSP_Files-1/tsp_example_3.txt"
 solve(fileName)
