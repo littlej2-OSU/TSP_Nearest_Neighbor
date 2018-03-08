@@ -5,15 +5,14 @@ Project Group 31
 import math
 import sys
 
-def getContent(fileName):
-    """Get and store all city data from file."""
+def getCityData(fileName):
     allCities = {}
 
     with open(fileName) as f:
         for line in f:
             city = []
 
-            # Split each line into array
+            # Split each line into an array
             lineArr = line.split()
             lineArr = list(map(int, lineArr))
             
@@ -34,15 +33,15 @@ def getDistance(city1, city2):
 
 def getSmallest(allCities, city):
     smallestId = -1
-    smallest = sys.maxsize
+    smallestPath = sys.maxsize
     
     for i in allCities:
         distance = getDistance(city, allCities[i])
-        if distance < smallest and distance > 0:
-            smallest = distance
+        if distance < smallestPath and distance > 0:
+            smallestPath = distance
             smallestId = i
 
-    path = [smallestId, smallest]
+    path = [smallestId, smallestPath]
     return path
 
 def removeCity(cities, index):
@@ -86,7 +85,7 @@ def getPath(cities, startingId):
     return [distance, path]
 
 def solve(fileName):
-    cities = getContent(fileName)
+    cities = getCityData(fileName)
     tourLength = len(cities)     
     bestDistance = sys.maxsize
     bestTour = None
@@ -106,5 +105,5 @@ def solve(fileName):
     print("Distance: {}".format(bestTour[0]))
     print("Cities visited: {}".format(len(bestTour[1])))
 
-fileName = "./TSP_Files-1/tsp_example_3.txt"
+fileName = "./TSP_Files-1/tsp_example_1.txt"
 solve(fileName)
