@@ -16,6 +16,7 @@ def getContentAsList(fileName):
 
 def getContent(fileName):
     allCities = {}
+
     with open(fileName) as f:
         for line in f:
             city = []
@@ -71,25 +72,29 @@ def removeCity(cities, index):
     del cities[index]
     return city
 
-def getPath(cities):
+def getPath(cities, startingId):
     path = []
+    distance = 0
     
-    path.append(removeCity(cities, 0))
-
+    # Remove starting city and add to path
+    path.append(removeCity(cities, startingId))
+    
+    # Iterate through unvisited cities
     while cities:
         smallest = []
         currentKey = -1
-        distance = -1
         current = path[len(path) - 1]
-
+        
+        # Get id from current city
         for key in current:
             currentKey = key
 
         smallest = getSmallest(cities, current[currentKey]) 
-        distance = smallest[1]
+        distance += smallest[1]
         path.append(removeCity(cities, smallest[0]))
     
-    return path
+    # TODO: Add distance from last city to first city
+    return [distance, path]
 
 def deleteAll(cities):
     i = 0
@@ -98,6 +103,6 @@ def deleteAll(cities):
         print(cities)
         i += 1
 
-cities = getContent("./TSP_Files-1/tsp_example_3.txt")
-path = getPath(cities)
+cities = getContent("./TSP_Files-1/tsp_example_2.txt")
+path = getPath(cities, 0)
 print(path)
