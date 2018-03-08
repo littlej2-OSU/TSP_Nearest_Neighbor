@@ -28,11 +28,13 @@ def getCityData(fileName):
 def outputTour(size, tour, fileName):
     f = open(fileName, "w")     
     
+    # Write tour distance to file
     f.write(str(size) + "\n")
-
+    
+    # Write tour path to file
     for city in tour:
-        for id in city:
-            f.write(str(id) + "\n")    
+        for cityId in city:
+            f.write(str(cityId) + "\n")
 
     f.close()
 
