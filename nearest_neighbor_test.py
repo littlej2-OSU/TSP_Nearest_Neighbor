@@ -85,6 +85,26 @@ def getPath(cities, startingId):
 
     return [distance, path]
 
-cities = getContent("./TSP_Files-1/tsp_example_2.txt")
-path = getPath(cities, 0)
-print("Distance: {}".format(path[0]))
+def solve(fileName):
+    cities = getContent(fileName)
+    tourLength = len(cities)     
+    bestDistance = sys.maxsize
+    bestTour = None
+    
+    # Run Nearest Neighbor with each city as starting point for more optimal solution for smaller input files
+    if tourLength < 500:
+        for i in range(tourLength):
+            citiesCopy = dict(cities)
+            path = getPath(citiesCopy, i)
+            if path[0] < bestDistance:
+                bestDistance = path[0]
+                bestTour = path
+                print("Best distance so far is: {}".format(path[0]))
+    else:
+        bestTour = getPath(citiesCopy, 0)
+
+    print("Distance: {}".format(bestTour[0]))
+    print("Cities visited: {}".format(len(bestTour[1])))
+
+fileName = "./TSP_Files-1/tsp_example_1.txt"
+solve(fileName)
