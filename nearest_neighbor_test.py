@@ -119,6 +119,12 @@ def solve(inputFile, outputFile):
     print("Distance: {}".format(bestTour[0]))
     print("Cities visited: {}".format(len(bestTour[1])))
 
-inputFile = "./TSP_Files-1/tsp_example_1.txt"
-outputFile = "output.txt"
-solve(inputFile, outputFile)
+def main():
+    if len(sys.argv) < 3:
+        print('Input must be in the form of "python3 nearest_neighbor_test.py [input file] [output file]"')
+    else:
+        inputFile = sys.argv[1]
+        outputFile = sys.argv[2]
+        solve(inputFile, outputFile)
+
+main()
