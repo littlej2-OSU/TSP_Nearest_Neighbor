@@ -6,9 +6,9 @@ import math
 import sys
 
 def getCityData(fileName):
-    cityData = []
-    unvisited = set()
-    distances = []
+    cityData = [] # Contains both unvisited cities and distances
+    unvisited = set() # City id's
+    distances = [] # x and y locations for each city
 
     with open(fileName) as f:
         for line in f:
@@ -56,26 +56,26 @@ def getDistance(city1, city2):
     return distance
 
 def getSmallest(cityData, currentId):
-    smallestId = -1
-    smallestPath = sys.maxsize
+    nearestCityId = -1
+    shortestDistance = sys.maxsize
     unvisited = cityData[0] # Set of city id's
     distances = cityData[1] # List of city x and y values
     
     for cityId in unvisited:
         travelDistance = getDistance(distances[currentId], distances[cityId])
 
-        if travelDistance < smallestPath and travelDistance > 0:
-            smallestPath = travelDistance
-            smallestId = cityId
+        if travelDistance < shortestDistance and travelDistance > 0:
+            shortestDistance = travelDistance
+            nearestCityId = cityId
 
-    return [smallestId, smallestPath]
+    return [nearestCityId, shortestDistance]
 
 def removeCity(cityData, index):
     unvisited = cityData[0] # Set of city id's
     unvisited.remove(index)
     return index
 
-def getPath(cityData, startingId):
+def nearestNeighbor(cityData, startingId):
     path = []
     unvisited = cityData[0] # Set of city id's
     distances = cityData[1] # List of city x and y values
@@ -108,16 +108,16 @@ def solve(inputFile, outputFile):
     # Run Nearest Neighbor with each city as starting point for more optimal solution for smaller input files
     if tourLength < 500:
         for i in range(tourLength):
-            unvisitedCopy = set(unvisited)
+            unvisitedCopy = set(unvisited) # Copy unvisited set since data is removed with each iteration
             cityDataCopy = [unvisitedCopy, distances]
 
-            path = getPath(cityDataCopy, i)
+            path = nearestNeighbor(cityDataCopy, i)
             if path[0] < bestDistance:
                 bestDistance = path[0]
                 bestTour = path
                 print("Best distance so far is: {}".format(path[0]))
     else:
-        bestTour = getPath(cityData, 0)
+        bestTour = nearestNeighbor(cityData, 0)
     
     outputTour(bestTour, outputFile)
     print("Distance: {}".format(bestTour[0]))
