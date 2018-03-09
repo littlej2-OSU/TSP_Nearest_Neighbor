@@ -6,7 +6,9 @@ import math
 import sys
 
 def getCityData(fileName):
-    allCities = {}
+    cityData = []
+    unvisited = set()
+    distances = []
 
     with open(fileName) as f:
         for line in f:
@@ -20,21 +22,30 @@ def getCityData(fileName):
             city.append(lineArr[1])
             city.append(lineArr[2])
             city = list(map(int, city))
+            
+            # Append to distances
+            distances.append(city)
+            
+            # Add city id to unvisited set
+            unvisited.add(lineArr[0])
 
-            allCities[lineArr[0]] = (city)
+    cityData.append(unvisited)
+    cityData.append(distances)
 
-    return allCities
+    return cityData
 
-def outputTour(size, tour, fileName):
+def outputTour(tourData, fileName):
+    size = tourData[0]
+    tour = tourData[1]
+
     f = open(fileName, "w")     
     
     # Write tour distance to file
     f.write(str(size) + "\n")
     
     # Write tour path to file
-    for city in tour:
-        for cityId in city:
-            f.write(str(cityId) + "\n")
+    for cityId in tour:
+        f.write(str(cityId) + "\n")
 
     f.close()
 
@@ -44,78 +55,71 @@ def getDistance(city1, city2):
     distance = round(math.sqrt(x + y))
     return distance
 
-def getSmallest(allCities, city):
+def getSmallest(cityData, currentId):
     smallestId = -1
     smallestPath = sys.maxsize
+    unvisited = cityData[0] # Set of city id's
+    distances = cityData[1] # List of city x and y values
     
-    for i in allCities:
-        distance = getDistance(city, allCities[i])
-        if distance < smallestPath and distance > 0:
-            smallestPath = distance
-            smallestId = i
+    for cityId in unvisited:
+        travelDistance = getDistance(distances[currentId], distances[cityId])
 
-    path = [smallestId, smallestPath]
-    return path
+        if travelDistance < smallestPath and travelDistance > 0:
+            smallestPath = travelDistance
+            smallestId = cityId
 
-def removeCity(cities, index):
-    city = {index: cities[index]}
-    del cities[index]
-    return city
+    return [smallestId, smallestPath]
 
-def getPath(cities, startingId):
+def removeCity(cityData, index):
+    unvisited = cityData[0] # Set of city id's
+    unvisited.remove(index)
+    return index
+
+def getPath(cityData, startingId):
     path = []
+    unvisited = cityData[0] # Set of city id's
+    distances = cityData[1] # List of city x and y values
     distance = 0
-    
+
     # Remove starting city and add to path
-    path.append(removeCity(cities, startingId))
+    path.append(removeCity(cityData, startingId))
     
     # Iterate through unvisited cities
-    while cities:
-        smallest = []
-        currentKey = None
-        current = path[len(path) - 1]
-        
-        # Get id from current city
-        for key in current:
-            currentKey = key
-
-        smallest = getSmallest(cities, current[currentKey]) 
+    while unvisited:
+        smallest = getSmallest(cityData, path[-1])
         distance += smallest[1]
-        path.append(removeCity(cities, smallest[0]))
+        
+        # Append nearest city id to path, remove from unvisited city set
+        path.append(removeCity(cityData, smallest[0]))
     
-    # Add distance from last city to first city to total distance
-    firstCity = path[0][startingId]
-    lastCity = path[len(path) - 1]
-    lastCityId = None
-    
-    # Get city id of last city visited 
-    for key in lastCity:
-        lastCityId = key
-    
-    # Complete the cycle, add last distance to total distance
-    distance += getDistance(firstCity, lastCity[lastCityId])
+    # Add distance from last city to first city, complete cycle
+    distance += getDistance(distances[path[0]], distances[path[-1]])
 
     return [distance, path]
 
 def solve(inputFile, outputFile):
-    cities = getCityData(inputFile)
-    tourLength = len(cities)     
+    cityData = getCityData(inputFile)
+    unvisited = cityData[0] # Set of city id's
+    distances = cityData[1] # List of city x and y values
+    tourLength = len(distances)     
     bestDistance = sys.maxsize
     bestTour = None
     
     # Run Nearest Neighbor with each city as starting point for more optimal solution for smaller input files
     if tourLength < 500:
         for i in range(tourLength):
-            citiesCopy = dict(cities)
-            path = getPath(citiesCopy, i)
+            unvisitedCopy = set(unvisited)
+            cityDataCopy = [unvisitedCopy, distances]
+
+            path = getPath(cityDataCopy, i)
             if path[0] < bestDistance:
                 bestDistance = path[0]
                 bestTour = path
                 print("Best distance so far is: {}".format(path[0]))
     else:
-        bestTour = getPath(cities, 0)
+        bestTour = getPath(cityData, 0)
     
-    outputTour(bestTour[0], bestTour[1], outputFile)
+    outputTour(bestTour, outputFile)
     print("Distance: {}".format(bestTour[0]))
     print("Cities visited: {}".format(len(bestTour[1])))
 
