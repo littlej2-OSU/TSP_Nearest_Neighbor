@@ -4,6 +4,7 @@ Project Group 31
 """
 import math
 import sys
+import time
 
 def getCityData(fileName):
     cityData = [] # Contains both unvisited cities and distances
@@ -124,11 +125,17 @@ def solve(inputFile, outputFile):
     print("Cities visited: {}".format(len(bestTour[1])))
 
 def main():
+    start_time = time.time() # Start timer
+
     if len(sys.argv) < 3:
         print('Input must be in the form of "python3 nearest_neighbor_test.py [input file] [output file]"')
     else:
         inputFile = sys.argv[1]
         outputFile = sys.argv[2]
         solve(inputFile, outputFile)
+
+    elapsedTime = round((time.time() - start_time), 2)
+    elapsedTime = elapsedTime / 60
+    print(elapsedTime)
 
 main()
