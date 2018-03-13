@@ -234,8 +234,6 @@ def main():
         outputFile = sys.argv[2]
         if len(sys.argv) == 4:
             optFlag = sys.argv[3]
-            print("flag: ")
-            print(optFlag)
         start = time.time()
         solve(inputFile, outputFile, optFlag)
         end = time.time()
