@@ -210,16 +210,18 @@ def swap(one, two, tour, new_tour):
 		i += 1
 
 
-def solve(inputFile, outputfile):
+def solve(inputFile, outputfile, flag):
 	data = getCityData(inputFile)
 	pList = primMST(data)
 	mst = primAdj(pList)
 	cycle = getCycle(mst)
-	#dist = getTotDist(cycle, data[1])
-	#outputTour([dist, cycle], outputfile)
-	new_tour = opt_2(cycle, data[1])
-	outputTour(new_tour, outputfile)
-	#print("Cycle Distance: " + str(dist))
+	if flag[0].lower() == 'y':
+		new_tour = opt_2(cycle, data[1])
+		outputTour(new_tour, outputfile)
+	else:
+		dist = getTotDist(cycle, data[1])
+		outputTour([dist, cycle], outputfile)
+		print("Tour Distance: " + str(dist))
 
 
 #function from nearest neighbor (written by Nathan Bennet)
@@ -227,10 +229,15 @@ def main():
     if len(sys.argv) < 3:
         print('Input must be in the form of "python3 nearest_neighbor_test.py [input file] [output file]"')
     else:
+        optFlag = 'n'
         inputFile = sys.argv[1]
         outputFile = sys.argv[2]
+        if len(sys.argv) == 4:
+            optFlag = sys.argv[3]
+            print("flag: ")
+            print(optFlag)
         start = time.time()
-        solve(inputFile, outputFile)
+        solve(inputFile, outputFile, optFlag)
         end = time.time()
         print("Run Time: " + str(end-start))
 
