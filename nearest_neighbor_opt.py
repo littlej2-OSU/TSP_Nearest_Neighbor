@@ -5,6 +5,7 @@ Project Group 31
 import math
 import sys
 import time
+import datetime
 
 def getCityData(fileName):
     cityData = [] # Contains both unvisited cities and distances
@@ -162,9 +163,10 @@ def solve(inputFile, outputFile):
     tourLength = len(distances)     
     bestDistance = sys.maxsize
     bestTour = None
+    visited = 0
 
     # Run Nearest Neighbor with each city as starting point for more optimal solution for smaller input files
-    if tourLength < 500:
+    if tourLength < 6000:
         for i in range(tourLength):
             unvisitedCopy = set(unvisited) # Copy unvisited set since data is removed with each iteration
             cityDataCopy = [unvisitedCopy, distances]
@@ -173,11 +175,14 @@ def solve(inputFile, outputFile):
             if path[0] < bestDistance:
                 bestDistance = path[0]
                 bestTour = path
-                print("Best distance so far is: {}".format(path[0]))
+                print("Best distance so far is: {} and {} solutions have been tried".format(path[0], visited))
+
+            visited += 1
     else:
         bestTour = nearestNeighbor(cityData, 0)
-
-    bestTour = opt_2(bestTour[1], cityData[1])
+    
+    if tourLength < 1000:
+        bestTour = opt_2(bestTour[1], cityData[1])
     
     outputTour(bestTour, outputFile)
     print("Distance: {}".format(bestTour[0]))
@@ -194,7 +199,9 @@ def main():
         solve(inputFile, outputFile)
 
     elapsedTime = round((time.time() - start_time), 2)
-    elapsedTime = elapsedTime / 60
-    print(elapsedTime)
+    m, s = divmod(elapsedTime, 60)
+
+    print("Seconds", elapsedTime)
+    print("Minutes", m, s)
 
 main()
