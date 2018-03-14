@@ -5,6 +5,8 @@ Project Group 31
 import math
 import sys
 import time
+# import datetime
+import math
 
 def getCityData(fileName):
     cityData = [] # Contains both unvisited cities and distances
@@ -162,10 +164,23 @@ def solve(inputFile, outputFile):
     tourLength = len(distances)     
     bestDistance = sys.maxsize
     bestTour = None
+    visited = 0
 
     # Run Nearest Neighbor with each city as starting point for more optimal solution for smaller input files
-    if tourLength < 500:
-        for i in range(tourLength):
+    if tourLength <= 5000:
+        tourRange = 0
+        
+        # Run nearest neighbor starting on only a portion of the first cities
+        if tourLength < 1000:
+            tourRange = tourLength
+        elif tourLength < 2000:
+            tourRange = math.floor(tourLength / 10)
+        elif tourLength < 5000:
+            tourRange = math.floor(tourLength / 80)
+        else:
+            tourRange = 5
+        
+        for i in range(tourRange):
             unvisitedCopy = set(unvisited) # Copy unvisited set since data is removed with each iteration
             cityDataCopy = [unvisitedCopy, distances]
 
@@ -173,11 +188,14 @@ def solve(inputFile, outputFile):
             if path[0] < bestDistance:
                 bestDistance = path[0]
                 bestTour = path
-                print("Best distance so far is: {}".format(path[0]))
+                print("Best distance so far is: {} and {} solutions have been tried".format(path[0], visited))
+
+            visited += 1
     else:
         bestTour = nearestNeighbor(cityData, 0)
-
-    bestTour = opt_2(bestTour[1], cityData[1])
+    
+    if tourLength < 500:
+        bestTour = opt_2(bestTour[1], cityData[1])
     
     outputTour(bestTour, outputFile)
     print("Distance: {}".format(bestTour[0]))
@@ -192,9 +210,13 @@ def main():
         inputFile = sys.argv[1]
         outputFile = sys.argv[2]
         solve(inputFile, outputFile)
-
-    elapsedTime = round((time.time() - start_time), 2)
-    elapsedTime = elapsedTime / 60
-    print(elapsedTime)
+    
+    # Get elapsed time (minutes:seconds)
+    elapsedTime = (time.time() - start_time)
+    print("Elapsed seconds: {}".format(math.floor(elapsedTime)))
+    # m = elapsedTime / 60
+    # m = math.floor(m) 
+    # s = math.floor(elapsedTime - (60 * m))
+    # print("Elapsed minutes: {}:{}".format(m, s))
 
 main()
