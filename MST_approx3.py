@@ -133,22 +133,11 @@ def getTotDist(cycle, cities):
 	return sum
 
 
-#gets tour total zero when first city is appended to the end
-def getTotDist_2(cycle, cities):
-	sum = 0
-	i = 1
-	while i < len(cycle):
-		#print("from: " + str(cycle[i-1]) + "  to: " + str(cycle[i]) + "  Dist: " + str(getDistance(cities[cycle[i-1]], cities[cycle[i]])))
-		sum += getDistance(cities[cycle[i-1]], cities[cycle[i]])
-		i += 1
-	return sum
-
-
 def opt_2(tour, cities):
 	size = len(tour)
 	i = 0
 	best_dist = getTotDist(tour, cities)
-	print("Starting Length: " + str(best_dist))						
+	print("Length pre 2-opt: " + str(best_dist))						
 	while i < 2:
 		j = 0
 		while j < size - 1:
@@ -157,14 +146,12 @@ def opt_2(tour, cities):
 				new_tour = []
 				#swap_slice(j, k, tour, new_tour)
 				swap(j, k, tour, new_tour)
-				#print(new_tour)
-				#print('\n')			
 				new_dist = getTotDist(new_tour, cities)
 				if new_dist < best_dist:
 					i = 0
 					tour = new_tour
 					best_dist = new_dist
-					print("Current Best: " + str(best_dist))						
+					#print("Current Best: " + str(best_dist))
 				k += 1
 			j += 1
 		i += 1
@@ -174,22 +161,17 @@ def opt_2(tour, cities):
 
 #def swap_slice(one, two, tour, new_tour):
 #	size = len(tour)
-#	print(str(one) + "	" + str(two))
 #	print(tour)
 #	if one != 0:
-#		new_tour = tour[:(one)]
-#	print(new_tour)
+#		new_tour.extend(tour[:one])
 #	count = 0
 #	i = one
 #	while i <= two:
-#		new_tour.append(tour[i])
+#		new_tour.append(tour[two-count])
 #		count += 1
 #		i += 1
-#	print(new_tour)
 #	if two != size:
 #		new_tour.extend(tour[(two+1):])
-#	print(new_tour)
-		
 
 
 def swap(one, two, tour, new_tour):
@@ -210,14 +192,15 @@ def swap(one, two, tour, new_tour):
 		i += 1
 
 
-def solve(inputFile, outputfile, flag):
+def solve(inputFile, outputfile):
 	data = getCityData(inputFile)
 	pList = primMST(data)
 	mst = primAdj(pList)
 	cycle = getCycle(mst)
-	if flag[0].lower() == 'y':
+	if len(cycle) < 300:
 		new_tour = opt_2(cycle, data[1])
 		outputTour(new_tour, outputfile)
+		print("Tour Distance: " + str(new_tour[0]))
 	else:
 		dist = getTotDist(cycle, data[1])
 		outputTour([dist, cycle], outputfile)
@@ -229,13 +212,10 @@ def main():
     if len(sys.argv) < 3:
         print('Input must be in the form of "python3 nearest_neighbor_test.py [input file] [output file]"')
     else:
-        optFlag = 'n'
         inputFile = sys.argv[1]
         outputFile = sys.argv[2]
-        if len(sys.argv) == 4:
-            optFlag = sys.argv[3]
         start = time.time()
-        solve(inputFile, outputFile, optFlag)
+        solve(inputFile, outputFile)
         end = time.time()
         print("Run Time: " + str(end-start))
 
