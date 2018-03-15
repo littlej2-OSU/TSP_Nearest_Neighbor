@@ -178,7 +178,7 @@ def solve(inputFile, outputFile):
         elif tourLength < 5000:
             tourRange = math.floor(tourLength / 80)
         else:
-            tourRange = 5
+            tourRange = 4
         
         for i in range(tourRange):
             unvisitedCopy = set(unvisited) # Copy unvisited set since data is removed with each iteration
@@ -204,11 +204,11 @@ def solve(inputFile, outputFile):
 def main():
     start_time = time.time() # Start timer
 
-    if len(sys.argv) < 3:
-        print('Input must be in the form of "python3 nearest_neighbor_test.py [input file] [output file]"')
+    if len(sys.argv) < 2:
+        print('Input must be in the form of "python3 nearest_neighbor_test.py [input file]"')
     else:
         inputFile = sys.argv[1]
-        outputFile = sys.argv[2]
+        outputFile = inputFile + ".tour"
         solve(inputFile, outputFile)
     
     # Get elapsed time (minutes:seconds)
