@@ -6,6 +6,9 @@ import sys
 import time
 import math
 
+#This function takes the input file as a parameter
+#Returns a set of cities (ex: {0, 1, 2}) and an array
+#of x, y corrdinates for each city (ex: [[5, 8], [6, 9], [10, 15]])
 def getCityData(fileName):
     cityData = [] # Contains both unvisited cities and distances
     unvisited = set() # City id's
@@ -35,6 +38,12 @@ def getCityData(fileName):
 
     return cityData
 
+#takes a array of tour data where the first element
+#is the total distance, and the second is an array of
+#cities in visited order.  The second element is the output
+#filename.  Function writes to ouput file, putting the distance
+#on the first line and then each city on subsequent lines in the 
+#order that they are visited in.
 def outputTour(tourData, fileName):
     size = tourData[0]
     tour = tourData[1]
@@ -50,12 +59,16 @@ def outputTour(tourData, fileName):
 
     f.close()
 
+#Takes to cities as parameters
+#calculates and then returns the distance between the two cities.
 def getDistance(city1, city2):
     x = (city1[0] - city2[0])**2
     y = (city1[1] - city2[1])**2
     distance = round(math.sqrt(x + y))
     return distance
 
+#takes what is returned from getCityData() and the current location
+#finds the next closest city and returns it's id and the distance
 def getSmallest(cityData, currentId):
     nearestCityId = -1
     shortestDistance = sys.maxsize
@@ -71,11 +84,19 @@ def getSmallest(cityData, currentId):
 
     return [nearestCityId, shortestDistance]
 
+#takes what is returned from getCityData() and the index of the
+#city to be removed from the unvisited list in cityData.
+#removes city from list and then returns which city was removed.
 def removeCity(cityData, index):
     unvisited = cityData[0] # Set of city id's
     unvisited.remove(index)
     return index
 
+#takes what is returned from getCityData() and as starting city
+#as parameters.  Finds the shortest tour for visiting every city once
+#that it can by visiting the next closest city.  (Greedy approach)
+#returns and array where the first value is the total distance, and the
+#second is an array that contains the tour.
 def nearestNeighbor(cityData, startingId):
     path = []
     unvisited = cityData[0] # Set of city id's
@@ -99,37 +120,52 @@ def nearestNeighbor(cityData, startingId):
     return [distance, path]
 
 
+#function takes in two cities, the current tour and an empty new_tour
+#it then creates a new_tour by swapping two edges
 def swap(one, two, tour, new_tour):
     size = len(tour)
+    #adds all cities from tour to new_tour up to one
     i = 0
     while i < one:
         new_tour.append(tour[i])
         i += 1  
     count = 0
+    #adds cities from two going backwards until it adds one
     i = one
     while i <= two:
         new_tour.append(tour[two-count])
         count += 1
         i += 1
     i = two + 1
+    #adds the rest of the cities to new_tour until the end of tour
     while i < size:
         new_tour.append(tour[i])
         i += 1
 
+#Function takes in a tour and a list of city coordinates
+#goes through tour swaping two edges at a time and checking to see if
+#it returns a better distance.  If the distance improves it keeps the new
+#tour and continues swapping until no more improvements can be made.
 def opt_2(tour, cities):
     size = len(tour)
     i = 0
     best_dist = getTotDist(tour, cities)
 
+    #while loop cycles until no improvements are made for a full loop cycle
+    #can increase 2 to have to check for improvements for more iterations
     while i < 2:
         j = 0
+        #loops through each city
         while j < size - 1:
             k = j+1
+            #for each city swap edges to that city with every edge to the end of 
+            #the current tour.  if an improvement is found, reset i to 0
             while k < size:
                 new_tour = []
                 swap(j, k, tour, new_tour)
                 new_dist = getTotDist(new_tour, cities)
 
+                #keep new tour if it's better
                 if new_dist < best_dist:
                     i = 0
                     tour = new_tour
@@ -140,7 +176,8 @@ def opt_2(tour, cities):
         i += 1
     return [best_dist, tour]
 
-
+#takes a tour and a list of city coordinates
+#returns the total distance of the tour
 def getTotDist(cycle, cities):
     sum = 0
     i = 1
@@ -151,6 +188,9 @@ def getTotDist(cycle, cities):
     sum += getDistance(cities[cycle[i-1]], cities[cycle[0]])
     return sum
 
+#Function to solve TSP.  Takes in an inputfile name and an output file name
+#Determins best method for finding a TSP tour based on number of cities
+#outputs the distance and tour to a file.
 def solve(inputFile, outputFile):
     cityData = getCityData(inputFile)
     unvisited = cityData[0] # Set of city id's
@@ -195,6 +235,8 @@ def solve(inputFile, outputFile):
     outputTour(bestTour, outputFile)
     print("Distance: {}".format(bestTour[0]))
 
+#main function gets input file name, creates output file name
+#and times how long it takes to run the algorithm.
 def main():
     start_time = time.time() # Start timer
 
