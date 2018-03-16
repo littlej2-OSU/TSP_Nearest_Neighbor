@@ -2,10 +2,8 @@
 Nearest Neighbor implementation for the Travelling Salesman Problem
 Project Group 31
 """
-import math
 import sys
 import time
-# import datetime
 import math
 
 def getCityData(fileName):
@@ -171,14 +169,16 @@ def solve(inputFile, outputFile):
         tourRange = 0
         
         # Run nearest neighbor starting on only a portion of the first cities
-        if tourLength < 1000:
+        if tourLength < 500:
             tourRange = tourLength
+        elif tourLength < 1000:
+            tourRange = 200
         elif tourLength < 2000:
-            tourRange = math.floor(tourLength / 10)
+            tourRange = 80
         elif tourLength < 5000:
-            tourRange = math.floor(tourLength / 80)
+            tourRange = 25
         else:
-            tourRange = 4
+            tourRange = 3
         
         for i in range(tourRange):
             unvisitedCopy = set(unvisited) # Copy unvisited set since data is removed with each iteration
@@ -211,12 +211,8 @@ def main():
         outputFile = inputFile + ".tour"
         solve(inputFile, outputFile)
     
-    # Get elapsed time (minutes:seconds)
+    # Get elapsed time in seconds
     elapsedTime = (time.time() - start_time)
     print("Elapsed seconds: {}".format(math.floor(elapsedTime)))
-    # m = elapsedTime / 60
-    # m = math.floor(m) 
-    # s = math.floor(elapsedTime - (60 * m))
-    # print("Elapsed minutes: {}:{}".format(m, s))
 
 main()
