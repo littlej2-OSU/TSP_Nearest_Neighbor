@@ -203,7 +203,7 @@ def main():
     start_time = time.time() # Start timer
 
     if len(sys.argv) < 2:
-        print('Input must be in the form of "python3 nearest_neighbor_test.py [input file]"')
+        print('Input must be in the form of "python3 opt.py [input file]"')
     else:
         inputFile = sys.argv[1]
         outputFile = inputFile + ".tour"
