@@ -120,23 +120,21 @@ def opt_2(tour, cities):
     size = len(tour)
     i = 0
     best_dist = getTotDist(tour, cities)
-    print("Starting Length: " + str(best_dist))                     
+
     while i < 2:
         j = 0
         while j < size - 1:
             k = j+1
             while k < size:
                 new_tour = []
-                #swap_slice(j, k, tour, new_tour)
                 swap(j, k, tour, new_tour)
-                #print(new_tour)
-                #print('\n')            
                 new_dist = getTotDist(new_tour, cities)
+
                 if new_dist < best_dist:
                     i = 0
                     tour = new_tour
                     best_dist = new_dist
-                    print("Current Best: " + str(best_dist))                        
+
                 k += 1
             j += 1
         i += 1
@@ -147,9 +145,9 @@ def getTotDist(cycle, cities):
     sum = 0
     i = 1
     while i < len(cycle):
-        #print("from: " + str(cycle[i-1]) + "  to: " + str(cycle[i]) + "  Dist: " + str(getDistance(cities[cycle[i-1]], cities[cycle[i]])))
         sum += getDistance(cities[cycle[i-1]], cities[cycle[i]])
         i += 1
+
     sum += getDistance(cities[cycle[i-1]], cities[cycle[0]])
     return sum
 
@@ -186,7 +184,6 @@ def solve(inputFile, outputFile):
             if path[0] < bestDistance:
                 bestDistance = path[0]
                 bestTour = path
-                print("Best distance so far is: {} and {} solutions have been tried".format(path[0], visited))
 
             visited += 1
     else:
@@ -197,7 +194,6 @@ def solve(inputFile, outputFile):
     
     outputTour(bestTour, outputFile)
     print("Distance: {}".format(bestTour[0]))
-    print("Cities visited: {}".format(len(bestTour[1])))
 
 def main():
     start_time = time.time() # Start timer
