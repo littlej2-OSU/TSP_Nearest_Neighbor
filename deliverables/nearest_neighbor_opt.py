@@ -116,7 +116,6 @@ def swap(one, two, tour, new_tour):
         new_tour.append(tour[i])
         i += 1
 
-
 def opt_2(tour, cities):
     size = len(tour)
     i = 0
@@ -153,7 +152,6 @@ def getTotDist(cycle, cities):
         i += 1
     sum += getDistance(cities[cycle[i-1]], cities[cycle[0]])
     return sum
-
 
 def solve(inputFile, outputFile):
     cityData = getCityData(inputFile)
